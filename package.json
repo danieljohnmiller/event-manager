@@ -1,0 +1,18 @@
+{
+  "name": "com.djm.event-manager",
+  "version": "1.0.0",
+  "displayName": "Event Manager",
+  "description": "Simple c# event manager for event-driven architecture.",
+  "unity": "2022.3",
+  "unityRelease": "3f1",
+  "documentationUrl": "https://example.com/",
+  "changelogUrl": "https://example.com/changelog.html",
+  "licensesUrl": "https://example.com/licensing.html",
+  "dependencies": {},
+  "keywords": ["event manager"],
+  "author": {
+    "name": "Daniel Miller",
+    "email": "daniel.miller.djm@gmail.com",
+    "url": "https://github.com/danieljohnmiller"
+  }
+}
