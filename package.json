@@ -5,6 +5,7 @@
   "description": "Simple c# event manager for event-driven architecture.",
   "unity": "2022.3",
   "unityRelease": "3f1",
+  "documentationUrl": "https://github.com/danieljohnmiller/event-manager",
   "changelogUrl": "https://github.com/danieljohnmiller/event-manager/blob/main/CHANGELOG.md",
   "licensesUrl": "https://github.com/danieljohnmiller/event-manager/blob/main/LICENSE.txt",
   "dependencies": {},
