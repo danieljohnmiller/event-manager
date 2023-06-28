@@ -9,13 +9,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 none
 
-## [1.0.0] - 2023-06-27
-
-### Added
-
-- Event manager with no return value and generic event ID.
-- Unit tests for Unity editor.
-
 ## [1.1.0] - 2023-06-28
 
 ### Added
@@ -28,3 +21,11 @@ none
 ### Changed
 
 - Cleaned up unit tests for no parameter event manager.
+
+
+## [1.0.0] - 2023-06-27
+
+### Added
+
+- Event manager with no return value and generic event ID.
+- Unit tests for Unity editor.
