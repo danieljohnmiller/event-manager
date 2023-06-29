@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System;
 
 namespace DJM.EventManager
@@ -6,49 +5,31 @@ namespace DJM.EventManager
     /// <summary>
     /// Event manager to help decouple components with event-driven architecture. Events are identified with an int, and have no return type.
     /// </summary>
-    public class EventManager
+    public class EventManager : EventManagerBase<Action>
     {
-        private readonly IDictionary<int, Action> _eventTable;
-        
-        public EventManager()
+        public override void AddObserver(int eventId, Action handler)
         {
-            _eventTable = new Dictionary<int, Action>();
-        }
-        
-        public void AddObserver(int eventId, Action handler)
-        {
-            if (_eventTable.ContainsKey(eventId))
-                _eventTable[eventId] += handler;
+            if (EventTable.ContainsKey(eventId))
+                EventTable[eventId] += handler;
             else
-                _eventTable.Add(eventId, handler);
+                EventTable.Add(eventId, handler);
         }
         
-        public void RemoveObserver(int eventId, Action handler)
+        public override void RemoveObserver(int eventId, Action handler)
         {
-            if (!_eventTable.ContainsKey(eventId))
+            if (!EventTable.ContainsKey(eventId))
                 return;
             
-            var eventAction = _eventTable[eventId] -= handler;
+            var eventAction = EventTable[eventId] -= handler;
 
             if(eventAction is null)
-                _eventTable.Remove(eventId);
+                EventTable.Remove(eventId);
         }
         
         public void TriggerEvent(int eventId)
         {
-            if (_eventTable.TryGetValue(eventId, out var eventAction))
+            if (EventTable.TryGetValue(eventId, out var eventAction))
                 eventAction?.Invoke();
-        }
-        
-        public void ClearEvent(int eventId)
-        {
-            if( _eventTable.ContainsKey(eventId)) 
-                _eventTable.Remove(eventId);
-        }
-        
-        public void ClearAllEvents()
-        {
-            _eventTable.Clear();
         }
     }
     
@@ -56,49 +37,31 @@ namespace DJM.EventManager
     /// Event manager to help decouple components with event-driven architecture. Events are identified with an int, and return one generic value to observers.
     /// </summary>
     /// <typeparam name="TParam">Type passed to observers when event triggered</typeparam>
-    public class EventManager<TParam>
+    public class EventManager<TParam> : EventManagerBase<Action<TParam>>
     {
-        private readonly IDictionary<int, Action<TParam>> _eventTable;
-        
-        public EventManager()
+        public override void AddObserver(int eventId, Action<TParam> handler)
         {
-            _eventTable = new Dictionary<int, Action<TParam>>();
-        }
-        
-        public void AddObserver(int eventId, Action<TParam> handler)
-        {
-            if (_eventTable.ContainsKey(eventId))
-                _eventTable[eventId] += handler;
+            if (EventTable.ContainsKey(eventId))
+                EventTable[eventId] += handler;
             else
-                _eventTable.Add(eventId, handler);
+                EventTable.Add(eventId, handler);
         }
         
-        public void RemoveObserver(int eventId, Action<TParam> handler)
+        public override void RemoveObserver(int eventId, Action<TParam> handler)
         {
-            if (!_eventTable.ContainsKey(eventId))
+            if (!EventTable.ContainsKey(eventId))
                 return;
             
-            var eventAction = _eventTable[eventId] -= handler;
+            var eventAction = EventTable[eventId] -= handler;
 
             if(eventAction is null)
-                _eventTable.Remove(eventId);
+                EventTable.Remove(eventId);
         }
-        
+
         public void TriggerEvent(int eventId, TParam param)
         {
-            if (_eventTable.TryGetValue(eventId, out var eventAction))
+            if (EventTable.TryGetValue(eventId, out var eventAction))
                 eventAction?.Invoke(param);
-        }
-        
-        public void ClearEvent(int eventId)
-        {
-            if( _eventTable.ContainsKey(eventId)) 
-                _eventTable.Remove(eventId);
-        }
-        
-        public void ClearAllEvents()
-        {
-            _eventTable.Clear();
         }
     }
 
@@ -107,49 +70,31 @@ namespace DJM.EventManager
     /// </summary>
     /// <typeparam name="TParam1">First type passed to observers when event triggered</typeparam>
     /// <typeparam name="TParam2">Second type passed to observers when event triggered</typeparam>
-    public class EventManager<TParam1, TParam2>
+    public class EventManager<TParam1, TParam2> : EventManagerBase<Action<TParam1, TParam2>>
     {
-        private readonly IDictionary<int, Action<TParam1, TParam2>> _eventTable;
-        
-        public EventManager()
+        public override void AddObserver(int eventId, Action<TParam1, TParam2> handler)
         {
-            _eventTable = new Dictionary<int, Action<TParam1, TParam2>>();
-        }
-        
-        public void AddObserver(int eventId, Action<TParam1, TParam2> handler)
-        {
-            if (_eventTable.ContainsKey(eventId))
-                _eventTable[eventId] += handler;
+            if (EventTable.ContainsKey(eventId))
+                EventTable[eventId] += handler;
             else
-                _eventTable.Add(eventId, handler);
+                EventTable.Add(eventId, handler);
         }
         
-        public void RemoveObserver(int eventId, Action<TParam1, TParam2> handler)
+        public override void RemoveObserver(int eventId, Action<TParam1, TParam2> handler)
         {
-            if (!_eventTable.ContainsKey(eventId))
+            if (!EventTable.ContainsKey(eventId))
                 return;
             
-            var eventAction = _eventTable[eventId] -= handler;
+            var eventAction = EventTable[eventId] -= handler;
 
             if(eventAction is null)
-                _eventTable.Remove(eventId);
+                EventTable.Remove(eventId);
         }
         
         public void TriggerEvent(int eventId, TParam1 param1, TParam2 param2)
         {
-            if (_eventTable.TryGetValue(eventId, out var eventAction))
+            if (EventTable.TryGetValue(eventId, out var eventAction))
                 eventAction?.Invoke(param1, param2);
-        }
-        
-        public void ClearEvent(int eventId)
-        {
-            if( _eventTable.ContainsKey(eventId)) 
-                _eventTable.Remove(eventId);
-        }
-        
-        public void ClearAllEvents()
-        {
-            _eventTable.Clear();
         }
     }
 }

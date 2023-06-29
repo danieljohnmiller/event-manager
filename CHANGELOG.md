@@ -7,7 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-- Event manager singleon
+- Event manager singleton
+
+## [2.1.0] - 2023-06-29
+
+### Added
+
+- Added base class for event managers, removing much duplicate code.
+
 
 ## [2.0.0] - 2023-06-29
 
