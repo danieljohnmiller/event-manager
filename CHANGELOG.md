@@ -9,6 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Event manager singleon
 
+## [2.0.0] - 2023-06-29
+
+### Changed
+
+- Changed event managers event ID from generic type to int. Generic type added little value, and made setting parameter types confusing.
+
 ## [1.2.0] - 2023-06-29
 
 ### Changed

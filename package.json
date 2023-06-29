@@ -1,6 +1,6 @@
 {
   "name": "com.djm.event-manager",
-  "version": "1.2.0",
+  "version": "2.0.0",
   "displayName": "Event Manager",
   "description": "Simple c# event manager for event-driven architecture.",
   "unity": "2022.3",

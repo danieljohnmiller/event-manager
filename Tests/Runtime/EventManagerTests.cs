@@ -11,7 +11,7 @@ namespace DJM.EventManager.Tests
         [Test]
         public void EventManager_TriggerEvent_NoParameters()
         {
-            var eventManager = new EventManager<int>();
+            var eventManager = new EventManager();
             var result = false;
             
             eventManager.AddObserver(EventId01, () => result = true);
@@ -24,7 +24,7 @@ namespace DJM.EventManager.Tests
         [Test]
         public void EventManager_TriggerEvent_OneParameter()
         {
-            var eventManager = new EventManager<int, int>();
+            var eventManager = new EventManager<int>();
 
             const int input = 5;
             var result = 0;
@@ -40,7 +40,7 @@ namespace DJM.EventManager.Tests
         [Test]
         public void EventManager_TriggerEvent_TwoParameter()
         {
-            var eventManager = new EventManager<int, int, string>();
+            var eventManager = new EventManager<int, string>();
 
             const int input1 = 5;
             const string input2 = "test";
@@ -64,7 +64,7 @@ namespace DJM.EventManager.Tests
         [Test]
         public void EventManager_TriggerCorrectEvent_NoParameters()
         {
-            var eventManager = new EventManager<int>();
+            var eventManager = new EventManager();
 
             var result1 = false;
             var result2 = false;
@@ -84,7 +84,7 @@ namespace DJM.EventManager.Tests
         [Test]
         public void EventManager_TriggerCorrectEvent_OneParameter()
         {
-            var eventManager = new EventManager<int, int>();
+            var eventManager = new EventManager<int>();
 
             const int input = 5;
             var result1 = 0;
@@ -107,7 +107,7 @@ namespace DJM.EventManager.Tests
         [Test]
         public void EventManager_TriggerCorrectEvent_TwoParameter()
         {
-            var eventManager = new EventManager<int, int, string>();
+            var eventManager = new EventManager<int, string>();
 
             const int input1 = 5;
             const string input2 = "test";
@@ -139,7 +139,7 @@ namespace DJM.EventManager.Tests
         [Test]
         public void EventManager_TriggerEventWithMultipleObservers_NoParameters()
         {
-            var eventManager = new EventManager<int>();
+            var eventManager = new EventManager();
 
             var result1 = false;
             var result2 = false;
@@ -159,7 +159,7 @@ namespace DJM.EventManager.Tests
         [Test]
         public void EventManager_TriggerEventWithMultipleObservers_OneParameter()
         {
-            var eventManager = new EventManager<int, int>();
+            var eventManager = new EventManager<int>();
 
             const int input = 5;
             var result1 = 0;
@@ -182,7 +182,7 @@ namespace DJM.EventManager.Tests
         [Test]
         public void EventManager_TriggerEventWithMultipleObservers_TwoParameter()
         {
-            var eventManager = new EventManager<int, int, string>();
+            var eventManager = new EventManager<int, string>();
 
             const int input1 = 5;
             const string input2 = "test";
@@ -215,7 +215,7 @@ namespace DJM.EventManager.Tests
         [Test]
         public void EventManager_ObserverNotTriggeredAfterRemoved_NoParameters()
         {
-            var eventManager = new EventManager<int>();
+            var eventManager = new EventManager();
             
             var result = false;
             void Handler() => result = true;
@@ -231,7 +231,7 @@ namespace DJM.EventManager.Tests
         [Test]
         public void EventManager_ObserverNotTriggeredAfterRemoved_OneParameter()
         {
-            var eventManager = new EventManager<int, int>();
+            var eventManager = new EventManager<int>();
 
             const int input = 5;
             var result = 0;
@@ -250,7 +250,7 @@ namespace DJM.EventManager.Tests
         [Test]
         public void EventManager_ObserverNotTriggeredAfterRemoved_TwoParameter()
         {
-            var eventManager = new EventManager<int, int, string>();
+            var eventManager = new EventManager<int, string>();
 
             const int input1 = 5;
             const string input2 = "test";
