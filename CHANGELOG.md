@@ -9,6 +9,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Event manager singleon
 
+## [1.2.0] - 2023-06-29
+
+### Changed
+
+- Refined event manager AddObserver implementation.
+- Refined event manager RemoveObserver implementation.
+- Refined event manager TriggerEvent implementation.
+
 ## [1.1.0] - 2023-06-28
 
 ### Added

@@ -18,35 +18,27 @@ namespace DJM.EventManager
         
         public void AddObserver(TEventId eventId, Action handler)
         {
-            var messageIdExists = _eventTable.TryGetValue(eventId, out var eventAction);
-
-            eventAction += handler;
-
-            if (messageIdExists)
-            {
-                _eventTable[eventId] = eventAction;
-            }
+            if (_eventTable.ContainsKey(eventId))
+                _eventTable[eventId] += handler;
             else
-            {
-                _eventTable.Add(eventId, eventAction);
-            }
+                _eventTable.Add(eventId, handler);
         }
         
         public void RemoveObserver(TEventId eventId, Action handler)
         {
-            if (!_eventTable.TryGetValue(eventId, out var eventAction)) return;
+            if (!_eventTable.ContainsKey(eventId))
+                return;
             
-            eventAction -= handler;
+            var eventAction = _eventTable[eventId] -= handler;
 
-            if (eventAction is null)
+            if(eventAction is null)
                 _eventTable.Remove(eventId);
         }
         
         public void TriggerEvent(TEventId eventId)
         {
-            if (!_eventTable.TryGetValue(eventId, out var eventAction)) return;
-            
-            eventAction?.Invoke();
+            if (_eventTable.TryGetValue(eventId, out var eventAction))
+                eventAction?.Invoke();
         }
         
         public void ClearEvent(TEventId eventId)
@@ -77,35 +69,27 @@ namespace DJM.EventManager
         
         public void AddObserver(TEventId eventId, Action<TParam> handler)
         {
-            var messageIdExists = _eventTable.TryGetValue(eventId, out var eventAction);
-
-            eventAction += handler;
-
-            if (messageIdExists)
-            {
-                _eventTable[eventId] = eventAction;
-            }
+            if (_eventTable.ContainsKey(eventId))
+                _eventTable[eventId] += handler;
             else
-            {
-                _eventTable.Add(eventId, eventAction);
-            }
+                _eventTable.Add(eventId, handler);
         }
         
         public void RemoveObserver(TEventId eventId, Action<TParam> handler)
         {
-            if (!_eventTable.TryGetValue(eventId, out var eventAction)) return;
+            if (!_eventTable.ContainsKey(eventId))
+                return;
             
-            eventAction -= handler;
+            var eventAction = _eventTable[eventId] -= handler;
 
-            if (eventAction is null)
+            if(eventAction is null)
                 _eventTable.Remove(eventId);
         }
         
         public void TriggerEvent(TEventId eventId, TParam param)
         {
-            if (!_eventTable.TryGetValue(eventId, out var eventAction)) return;
-            
-            eventAction?.Invoke(param);
+            if (_eventTable.TryGetValue(eventId, out var eventAction))
+                eventAction?.Invoke(param);
         }
         
         public void ClearEvent(TEventId eventId)
@@ -137,35 +121,27 @@ namespace DJM.EventManager
         
         public void AddObserver(TEventId eventId, Action<TParam1, TParam2> handler)
         {
-            var messageIdExists = _eventTable.TryGetValue(eventId, out var eventAction);
-
-            eventAction += handler;
-
-            if (messageIdExists)
-            {
-                _eventTable[eventId] = eventAction;
-            }
+            if (_eventTable.ContainsKey(eventId))
+                _eventTable[eventId] += handler;
             else
-            {
-                _eventTable.Add(eventId, eventAction);
-            }
+                _eventTable.Add(eventId, handler);
         }
         
         public void RemoveObserver(TEventId eventId, Action<TParam1, TParam2> handler)
         {
-            if (!_eventTable.TryGetValue(eventId, out var eventAction)) return;
+            if (!_eventTable.ContainsKey(eventId))
+                return;
             
-            eventAction -= handler;
+            var eventAction = _eventTable[eventId] -= handler;
 
-            if (eventAction is null)
+            if(eventAction is null)
                 _eventTable.Remove(eventId);
         }
         
         public void TriggerEvent(TEventId eventId, TParam1 param1, TParam2 param2)
         {
-            if (!_eventTable.TryGetValue(eventId, out var eventAction)) return;
-            
-            eventAction?.Invoke(param1, param2);
+            if (_eventTable.TryGetValue(eventId, out var eventAction))
+                eventAction?.Invoke(param1, param2);
         }
         
         public void ClearEvent(TEventId eventId)
