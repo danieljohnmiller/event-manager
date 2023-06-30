@@ -7,6 +7,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+none
+
+## [4.0.0] - 2023-06-30
+
+### Added
+
+- Added additional global event manager unit tests.
+
+### Removed
+
+- Deleted event message base as it was unused.
+
+### Changed
+
+- Updated event manager singleton to ensure thread safety.
+- Implemented remaining methods on global event manager.
+- Renamed global event manager methods for consistency.
+- Removed unimplemented 'clear' methods from global event manager. These are not 100% necessary, so have been de-scoped for now.
+
+### Fixed
+
+- Bug in global event manager that prevented more than one observer from invoking.
+
 ## [3.0.0] - 2023-06-30
 
 ### Added
@@ -19,10 +42,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Updated Event manager base class and interface to be more flexible.
-
-### Removed
-
-### Fixed
 
 ## [2.1.0] - 2023-06-29
 

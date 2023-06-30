@@ -1,12 +1,18 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 
 namespace DJM.EventManager
 {
+    /// <summary>
+    /// Facilitates the decoupled communication of components. Is a singleton, so only one instance can exist at any time.
+    /// Events are identified using an int, and support multiple event handlers with zero or one generic parameter.
+    /// Each event can have event handlers of different parameter types. This type may need to be specified when adding the handlers,
+    /// and when triggering its event. Only event handlers with the given parameter type will be triggered.
+    /// </summary>
     public sealed class GlobalEventManager : IGlobalEventManager<int>
     {
+        private static readonly object ThreadSafetyLock = new();
+        
         private static GlobalEventManager _globalEventManager;
         
         private readonly Dictionary<int, Dictionary<Type, Delegate>> _eventTable;
@@ -16,108 +22,144 @@ namespace DJM.EventManager
             _eventTable = new Dictionary<int, Dictionary<Type, Delegate>>();
         }
 
+        /// <summary>
+        /// Singleton instance of GlobalEventManager.
+        /// </summary>
         public static GlobalEventManager Instance
         {
-            get { return _globalEventManager ??= new GlobalEventManager(); }
-        }
-
-
-        public void AddObserver(int eventId, Action handler)
-        {
-            // event id does not exist
-            if (!_eventTable.ContainsKey(eventId))
+            get
             {
-                _eventTable[eventId] = new Dictionary<Type, Delegate> {[typeof(void)] = handler};
-                return;
+                lock (ThreadSafetyLock)
+                {
+                    return _globalEventManager ??= new GlobalEventManager();
+                }
             }
-
-            // event id exists
-            var handlerTypeTable = _eventTable[eventId];
-            
-            // no existing observers under given handler param type
-            if (!handlerTypeTable.ContainsKey(typeof(void)))
-            {
-                handlerTypeTable[typeof(void)] = handler;
-                return;
-            }
-
-            var observers = handlerTypeTable[typeof(void)];
-            observers = Delegate.Combine(observers, handler);
         }
-
-        public void AddObserver<THandlerParam>(int eventId, Action<THandlerParam> handler)
+        
+        /// <summary>
+        /// Add handler to event.
+        /// </summary>
+        /// <param name="eventId">Event identifier.</param>
+        /// <param name="handler">Event handler with no parameters.</param>
+        public void AddHandler(int eventId, Action handler)
         {
-            // event id does not exist
-            if (!_eventTable.ContainsKey(eventId))
-            {
-                _eventTable[eventId] = new Dictionary<Type, Delegate> {[typeof(THandlerParam)] = handler};
-                return;
-            }
-
-            // event id exists
-            var handlerTypeTable = _eventTable[eventId];
-            
-            // no existing observers under given handler param type
-            if (!handlerTypeTable.ContainsKey(typeof(THandlerParam)))
-            {
-                handlerTypeTable[typeof(THandlerParam)] = handler;
-                return;
-            }
-
-            var observers = handlerTypeTable[typeof(THandlerParam)];
-            observers = Delegate.Combine(observers, handler);
+            AddHandler(eventId, typeof(void), handler);
         }
 
-        public void RemoveObserver(int eventId, Action handler)
+        /// <summary>
+        /// Add handler to event.
+        /// </summary>
+        /// <param name="eventId">Event identifier.</param>
+        /// <param name="handler">Event handler with one generic parameters.</param>
+        /// <typeparam name="THandlerParam">Generic type of handlers parameter.</typeparam>
+        public void AddHandler<THandlerParam>(int eventId, Action<THandlerParam> handler)
         {
-            throw new NotImplementedException();
+            AddHandler(eventId, typeof(THandlerParam), handler);
         }
-
-        public void RemoveObserver<THandlerParam>(int eventId, Action<THandlerParam> handler)
+        
+        /// <summary>
+        /// Remove handler from event.
+        /// </summary>
+        /// <param name="eventId">Event identifier.</param>
+        /// <param name="handler">Event handler with no parameters.</param>
+        public void RemoveHandler(int eventId, Action handler)
         {
-            throw new NotImplementedException();
+            RemoveHandler(eventId, typeof(void), handler);
         }
 
+        /// <summary>
+        /// Remove handler from event.
+        /// </summary>
+        /// <param name="eventId">Event identifier.</param>
+        /// <param name="handler">Event handler with one generic parameter.</param>
+        public void RemoveHandler<THandlerParam>(int eventId, Action<THandlerParam> handler)
+        {
+            RemoveHandler(eventId, typeof(THandlerParam), handler);
+        }
+
+        /// <summary>
+        /// Trigger event.
+        /// </summary>
+        /// <param name="eventId">Event identifier.</param>
         public void TriggerEvent(int eventId)
         {
-            if (!_eventTable.TryGetValue(eventId, out var typeTable)) return;
-
-            if (!typeTable.ContainsKey(typeof(void))) return;
+            var handlerParamId = typeof(void);
             
-            var b = typeTable[typeof(void)] as Action;
-            b?.Invoke();
+            if (!_eventTable.TryGetValue(eventId, out var handlerTable)) 
+                return;
+
+            if (!handlerTable.ContainsKey(handlerParamId)) 
+                return;
+            
+            var handlers = handlerTable[handlerParamId] as Action;
+            handlers?.Invoke();
         }
 
+        /// <summary>
+        /// Trigger event.
+        /// </summary>
+        /// <param name="eventId">Event identifier.</param>
+        /// <param name="param">Event handler parameter.</param>
+        /// <typeparam name="THandlerParam">Event handler parameter type.</typeparam>
         public void TriggerEvent<THandlerParam>(int eventId, THandlerParam param)
         {
-            if (!_eventTable.TryGetValue(eventId, out var typeTable)) return;
-
-            if (!typeTable.ContainsKey(typeof(THandlerParam))) return;
+            var handlerParamId = typeof(THandlerParam);
             
-            var b = typeTable[typeof(THandlerParam)] as Action<THandlerParam>;
-            b?.Invoke(param);
+            if (!_eventTable.TryGetValue(eventId, out var handlerTable))
+                return;
+
+            if (!handlerTable.ContainsKey(handlerParamId)) 
+                return;
+            
+            var handlers = handlerTable[handlerParamId] as Action<THandlerParam>;
+            handlers?.Invoke(param);
         }
 
+        /// <summary>
+        /// Clear all existing handlers from event.
+        /// </summary>
+        /// <param name="eventId"></param>
         public void ClearEvent(int eventId)
         {
-            throw new NotImplementedException();
+            _eventTable.Remove(eventId);
         }
 
-        public void ClearEvent<THandlerParam>(int eventId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void ClearAll(int eventId)
-        {
-            throw new NotImplementedException();
-        }
-
+        /// <summary>
+        /// Clear all existing handlers.
+        /// </summary>
         public void ClearAll()
         {
-            throw new NotImplementedException();
+            _eventTable.Clear();
+        }
+        
+        private void AddHandler(int eventId, Type handlerParamId, Delegate handler)
+        {
+            if (!_eventTable.ContainsKey(eventId))
+            {
+                _eventTable[eventId] = new Dictionary<Type, Delegate> {[handlerParamId] = handler};
+                return;
+            }
+            
+            var handlerTypeTable = _eventTable[eventId];
+            
+            if (!handlerTypeTable.ContainsKey(handlerParamId))
+            {
+                handlerTypeTable[handlerParamId] = handler;
+                return;
+            }
+            
+            handlerTypeTable[handlerParamId] = Delegate.Combine(handlerTypeTable[handlerParamId], handler);
+        }
+        
+        private void RemoveHandler(int eventId, Type handlerParamId, Delegate handler)
+        {
+            if (!_eventTable.TryGetValue(eventId, out var handlerTable))
+                return;
+
+            if(!handlerTable.TryGetValue(handlerParamId, out var handlers))
+                return;
+            
+            handlerTable[handlerParamId] = Delegate.Remove(handlers, handler);
         }
     }
 }
-
-
