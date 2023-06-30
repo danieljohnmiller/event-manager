@@ -7,7 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-- Event manager singleton
+## [3.0.0] - 2023-06-30
+
+### Added
+
+- Partially implemented global (singleton) event manager.
+- Global event manager interface.
+- Global event manager tests.
+- Event message base class.
+
+### Changed
+
+- Updated Event manager base class and interface to be more flexible.
+
+### Removed
+
+### Fixed
 
 ## [2.1.0] - 2023-06-29
 

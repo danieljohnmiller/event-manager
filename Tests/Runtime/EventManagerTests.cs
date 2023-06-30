@@ -41,7 +41,7 @@ namespace DJM.EventManager.Tests
         public void EventManager_TriggerEvent_TwoParameter()
         {
             var eventManager = new EventManager<int, string>();
-
+        
             const int input1 = 5;
             const string input2 = "test";
             var result1 = 0;
@@ -108,7 +108,7 @@ namespace DJM.EventManager.Tests
         public void EventManager_TriggerCorrectEvent_TwoParameter()
         {
             var eventManager = new EventManager<int, string>();
-
+        
             const int input1 = 5;
             const string input2 = "test";
             var resultA1 = 0;
@@ -183,7 +183,7 @@ namespace DJM.EventManager.Tests
         public void EventManager_TriggerEventWithMultipleObservers_TwoParameter()
         {
             var eventManager = new EventManager<int, string>();
-
+        
             const int input1 = 5;
             const string input2 = "test";
             var resultA1 = 0;
@@ -251,17 +251,17 @@ namespace DJM.EventManager.Tests
         public void EventManager_ObserverNotTriggeredAfterRemoved_TwoParameter()
         {
             var eventManager = new EventManager<int, string>();
-
+        
             const int input1 = 5;
             const string input2 = "test";
             var result1 = 0;
             var result2 = string.Empty;
-
+        
             void HandlerA(int i, string s) { result1 = i; result2 = s; }
-
+        
             eventManager.AddObserver(EventId01, HandlerA);
             eventManager.RemoveObserver(EventId01, HandlerA);
-
+        
             Assert.AreNotEqual(input1, result1);
             Assert.AreNotEqual(input2, result2);
             

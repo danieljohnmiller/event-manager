@@ -2,15 +2,13 @@ using System;
 
 namespace DJM.EventManager
 {
-    public interface IEventManagerOneParam<TEventId>
+    public interface IEventManager<TEventId, in THandler> where THandler : Delegate
     {
-        public void AddObserver<TEventParam>(TEventId eventId, Action<TEventParam> handler);
+        public abstract void AddObserver(TEventId eventId, THandler handler);
 
-        public void RemoveObserver<TEventParam>(TEventId eventId, Action<TEventParam> handler);
+        public abstract void RemoveObserver(TEventId eventId, THandler handler);
 
-        public void TriggerEvent<TEventParam>(TEventId eventId, TEventParam param);
-
-        public void ClearEvent<TEventParam>(TEventId eventId);
+        public void ClearEvent(TEventId eventId);
 
         public void ClearAllEvents();
     }

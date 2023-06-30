@@ -1,11 +1,13 @@
 using System;
+using System.Collections;
+using System.Collections.Generic;
 
 namespace DJM.EventManager
 {
     /// <summary>
-    /// Event manager to help decouple components with event-driven architecture. Events are identified with an int, and have no return type.
+    /// The Event Manager facilitates decoupling of components in event-driven architecture. Events are identified using an integer value and invoke event handlers that do not require any parameters.
     /// </summary>
-    public class EventManager : EventManagerBase<Action>
+    public class EventManager : EventManagerBase<int, Action>
     {
         public override void AddObserver(int eventId, Action handler)
         {
@@ -34,11 +36,17 @@ namespace DJM.EventManager
     }
     
     /// <summary>
-    /// Event manager to help decouple components with event-driven architecture. Events are identified with an int, and return one generic value to observers.
+    /// The Event Manager facilitates decoupling of components in event-driven architecture. Events are identified using an integer value and invoke event handlers that require one generic parameter.
     /// </summary>
-    /// <typeparam name="TParam">Type passed to observers when event triggered</typeparam>
-    public class EventManager<TParam> : EventManagerBase<Action<TParam>>
+    /// <typeparam name="TParam">Event handler parameter.</typeparam>
+    public class EventManager<TParam> : EventManagerBase<int, Action<TParam>>
     {
+
+        public IDictionary<int,Action<TParam>> GetDictTemp()
+        {
+            return EventTable;
+        }
+
         public override void AddObserver(int eventId, Action<TParam> handler)
         {
             if (EventTable.ContainsKey(eventId))
@@ -66,11 +74,11 @@ namespace DJM.EventManager
     }
 
     /// <summary>
-    /// Event manager to help decouple components with event-driven architecture. Events are identified with an int, and return one generic value to observers.
+    /// The Event Manager facilitates decoupling of components in event-driven architecture. Events are identified using an integer value and invoke event handlers that require two generic parameters.
     /// </summary>
-    /// <typeparam name="TParam1">First type passed to observers when event triggered</typeparam>
-    /// <typeparam name="TParam2">Second type passed to observers when event triggered</typeparam>
-    public class EventManager<TParam1, TParam2> : EventManagerBase<Action<TParam1, TParam2>>
+    /// <typeparam name="TParam1">First event handler parameter.</typeparam>
+    /// <typeparam name="TParam2">Second event handler parameter.</typeparam>
+    public class EventManager<TParam1, TParam2> : EventManagerBase<int, Action<TParam1, TParam2>>
     {
         public override void AddObserver(int eventId, Action<TParam1, TParam2> handler)
         {
@@ -86,7 +94,7 @@ namespace DJM.EventManager
                 return;
             
             var eventAction = EventTable[eventId] -= handler;
-
+    
             if(eventAction is null)
                 EventTable.Remove(eventId);
         }
