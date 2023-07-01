@@ -9,6 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 none
 
+## [4.1.0] - 2023-07-01
+
+### Changed
+
+- Refactored global event manager implementation for clarity and consistency.
+
 ## [4.0.0] - 2023-06-30
 
 ### Added
