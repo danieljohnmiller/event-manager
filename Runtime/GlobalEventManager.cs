@@ -5,7 +5,7 @@ namespace DJM.EventManager
     /// <summary>
     /// Facilitates decoupled communication of components with events. Is a singleton, so only one instance can exist at a time.
     /// </summary>
-    public sealed class GlobalEventManager : IGlobalEventManager
+    public sealed class GlobalEventManager : IEventManager
     {
         private static readonly object ThreadSafetyLock = new();
         

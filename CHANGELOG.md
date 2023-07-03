@@ -9,6 +9,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 none
 
+## [7.0.0] - 2023-07-03
+
+### Changed
+
+- Renamed IGlobalEventManager to IEventManager.
+
+### Added 
+- added project and usage information to readme.
+- Added instantiatable version of event manager that implements IEventManager.
+- Summary to IEventManager.
+
+### Removed
+
+- Obsolete event manager components including old IEventManager interface.
+- Obsolete event manager unit tests.
+- Duplicate summary info from GlobalEventManager implementation (most moved to IEventManager).
+
+
 ## [6.0.0] - 2023-07-03
 
 ### Changed
