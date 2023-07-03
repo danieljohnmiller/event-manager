@@ -1,6 +1,4 @@
 using System;
-using System.Collections.Generic;
-using PlasticGui.WorkspaceWindow.Diff;
 
 namespace DJM.EventManager
 {
@@ -16,11 +14,11 @@ namespace DJM.EventManager
         
         private static GlobalEventManager _globalEventManager;
         
-        private readonly Dictionary<int, Dictionary<Type, Delegate>> _eventTable;
-
+        private readonly NestedEventTable<int, Type> _eventTable;
+        
         private GlobalEventManager()
         {
-            _eventTable = new Dictionary<int, Dictionary<Type, Delegate>>();
+            _eventTable = new NestedEventTable<int, Type>();
         }
 
         /// <summary>
@@ -44,7 +42,7 @@ namespace DJM.EventManager
         /// <param name="handler">Event handler with no parameters.</param>
         public void AddHandler(int eventId, Action handler)
         {
-            AddHandler(eventId, typeof(void), handler);
+            _eventTable.Add(eventId, typeof(void), handler);
         }
 
         /// <summary>
@@ -55,7 +53,7 @@ namespace DJM.EventManager
         /// <typeparam name="THandlerParam">Generic type of handlers parameter.</typeparam>
         public void AddHandler<THandlerParam>(int eventId, Action<THandlerParam> handler)
         {
-            AddHandler(eventId, typeof(THandlerParam), handler);
+            _eventTable.Add(eventId, typeof(THandlerParam), handler);
         }
         
         /// <summary>
@@ -65,7 +63,7 @@ namespace DJM.EventManager
         /// <param name="handler">Event handler with no parameters.</param>
         public void RemoveHandler(int eventId, Action handler)
         {
-            RemoveHandler(eventId, typeof(void), handler);
+            _eventTable.Remove(eventId, typeof(void), handler);
         }
 
         /// <summary>
@@ -75,7 +73,7 @@ namespace DJM.EventManager
         /// <param name="handler">Event handler with one generic parameter.</param>
         public void RemoveHandler<THandlerParam>(int eventId, Action<THandlerParam> handler)
         {
-            RemoveHandler(eventId, typeof(THandlerParam), handler);
+            _eventTable.Remove(eventId, typeof(THandlerParam), handler);
         }
 
         /// <summary>
@@ -84,8 +82,7 @@ namespace DJM.EventManager
         /// <param name="eventId">Event identifier.</param>
         public void TriggerEvent(int eventId)
         {
-            var handlers = GetEventHandlers(eventId, typeof(void)) as Action;
-            
+            var handlers = _eventTable.GetValue(eventId, typeof(void)) as Action;
             handlers?.Invoke();
         }
 
@@ -97,8 +94,7 @@ namespace DJM.EventManager
         /// <typeparam name="THandlerParam">Event handler parameter type.</typeparam>
         public void TriggerEvent<THandlerParam>(int eventId, THandlerParam param)
         {
-            var handlers = GetEventHandlers(eventId, typeof(THandlerParam)) as Action<THandlerParam>;
-            
+            var handlers = _eventTable.GetValue(eventId, typeof(THandlerParam)) as Action<THandlerParam>;
             handlers?.Invoke(param);
         }
 
@@ -108,7 +104,7 @@ namespace DJM.EventManager
         /// <param name="eventId"></param>
         public void ClearEvent(int eventId)
         {
-            _eventTable.Remove(eventId);
+           _eventTable.Clear(eventId);
         }
 
         /// <summary>
@@ -117,65 +113,6 @@ namespace DJM.EventManager
         public void ClearAll()
         {
             _eventTable.Clear();
-        }
-        
-        
-        
-        private void AddHandler(int eventId, Type handlerSignature, Delegate handler)
-        {
-            var handlerTable = GetEventHandlerTable(eventId);
-            
-            if (handlerTable is null)
-            {
-                _eventTable[eventId] = new Dictionary<Type, Delegate> {[handlerSignature] = handler};
-                return;
-            }
-            
-            var handlers = GetEventHandlers(handlerSignature, handlerTable);
-            
-            if (handlers is null)
-            {
-                handlerTable[handlerSignature] = handler;
-                return;
-            }
-            
-            handlerTable[handlerSignature] = Delegate.Combine(handlerTable[handlerSignature], handler);
-        }
-        
-        private void RemoveHandler(int eventId, Type handlerSignature, Delegate handler)
-        {
-            var handlerTable = GetEventHandlerTable(eventId);
-            
-            if (handlerTable is null) return;
-            
-            var handlers = GetEventHandlers(handlerSignature, handlerTable);
-
-            if(handlers is null) return;
-            
-            handlerTable[handlerSignature] = Delegate.Remove(handlers, handler);
-        }
-        
-        
-        
-        private Delegate GetEventHandlers(int eventId, Type handlerSignature)
-        {
-            var eventHandlers = GetEventHandlerTable(eventId);
-
-            if (eventHandlers is null)
-                return null;
-
-            return eventHandlers.TryGetValue(handlerSignature, out var value) ? value : null;
-        }
-        
-        private static Delegate GetEventHandlers(Type handlerSignature, IReadOnlyDictionary<Type, Delegate> handlerTable)
-        {
-            return handlerTable.TryGetValue(handlerSignature, out var value) ? value : null;
-        }
-
-        private Dictionary<Type, Delegate> GetEventHandlerTable(int eventId)
-        {
-            return _eventTable.TryGetValue(eventId, out var handlerTable) 
-                ? handlerTable : null;
         }
     }
 }
