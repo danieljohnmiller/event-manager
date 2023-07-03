@@ -150,7 +150,7 @@ namespace DJM.EventManager.Tests
             eventManager.AddHandler<float>(EventId01, (float c) => result3 = c);
             eventManager.AddHandler(EventId01, () => result4 = true);
 
-            eventManager.ClearEvent(EventId01);
+            eventManager.RemoveEvent(EventId01);
             
             eventManager.TriggerEvent<string>(EventId02, input1);
             eventManager.TriggerEvent<int>(EventId01, input2);
@@ -176,7 +176,7 @@ namespace DJM.EventManager.Tests
             eventManager.AddHandler<string>(EventId01, (string a) => result1 = a);
             eventManager.AddHandler(EventId01, () => result2 = true);
             
-            eventManager.ClearEventHandlerType(EventId01);
+            eventManager.RemoveEventHandlerType(EventId01, null);
             
             eventManager.TriggerEvent<string>(EventId01, input1);
             eventManager.TriggerEvent(EventId01);
@@ -198,7 +198,7 @@ namespace DJM.EventManager.Tests
             eventManager.AddHandler<string>(EventId01, (string a) => result1 = a);
             eventManager.AddHandler(EventId01, () => result2 = true);
             
-            eventManager.ClearEventHandlerType(EventId01, typeof(string));
+            eventManager.RemoveEventHandlerType(EventId01, typeof(string));
             
             eventManager.TriggerEvent<string>(EventId01, input1);
             eventManager.TriggerEvent(EventId01);
@@ -225,7 +225,7 @@ namespace DJM.EventManager.Tests
             eventManager.AddHandler<int>(EventId02, (int a) => result3 = a);
             eventManager.AddHandler(EventId02, () => result4 = true);
             
-            eventManager.ClearAll();
+            eventManager.RemoveAll();
             
             eventManager.TriggerEvent<string>(EventId01, input1);
             eventManager.TriggerEvent(EventId01);
