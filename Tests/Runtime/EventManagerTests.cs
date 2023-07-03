@@ -1,15 +1,17 @@
+using System;
 using NUnit.Framework;
 
 namespace DJM.EventManager.Tests
 {
     [TestFixture]
+    [Obsolete]
     public class EventManagerTests
     {
         private const int EventId01 = 0;
         private const int EventId02 = 1;
 
         [Test]
-        public void EventManager_TriggerEvent_NoParameters()
+        public void TriggerEvent_NoParameters()
         {
             var eventManager = new EventManager();
             var result = false;
@@ -22,7 +24,7 @@ namespace DJM.EventManager.Tests
         }
         
         [Test]
-        public void EventManager_TriggerEvent_OneParameter()
+        public void TriggerEvent_OneParameter()
         {
             var eventManager = new EventManager<int>();
 
@@ -38,7 +40,7 @@ namespace DJM.EventManager.Tests
         }
         
         [Test]
-        public void EventManager_TriggerEvent_TwoParameter()
+        public void TriggerEvent_TwoParameter()
         {
             var eventManager = new EventManager<int, string>();
         
@@ -62,7 +64,7 @@ namespace DJM.EventManager.Tests
         
         
         [Test]
-        public void EventManager_TriggerCorrectEvent_NoParameters()
+        public void TriggerCorrectEvent_NoParameters()
         {
             var eventManager = new EventManager();
 
@@ -82,7 +84,7 @@ namespace DJM.EventManager.Tests
         }
         
         [Test]
-        public void EventManager_TriggerCorrectEvent_OneParameter()
+        public void TriggerCorrectEvent_OneParameter()
         {
             var eventManager = new EventManager<int>();
 
@@ -105,7 +107,7 @@ namespace DJM.EventManager.Tests
         }
         
         [Test]
-        public void EventManager_TriggerCorrectEvent_TwoParameter()
+        public void TriggerCorrectEvent_TwoParameter()
         {
             var eventManager = new EventManager<int, string>();
         
@@ -137,7 +139,7 @@ namespace DJM.EventManager.Tests
 
 
         [Test]
-        public void EventManager_TriggerEventWithMultipleObservers_NoParameters()
+        public void TriggerEventWithMultipleObservers_NoParameters()
         {
             var eventManager = new EventManager();
 
@@ -157,7 +159,7 @@ namespace DJM.EventManager.Tests
         }
         
         [Test]
-        public void EventManager_TriggerEventWithMultipleObservers_OneParameter()
+        public void TriggerEventWithMultipleObservers_OneParameter()
         {
             var eventManager = new EventManager<int>();
 
@@ -180,7 +182,7 @@ namespace DJM.EventManager.Tests
         }
         
         [Test]
-        public void EventManager_TriggerEventWithMultipleObservers_TwoParameter()
+        public void TriggerEventWithMultipleObservers_TwoParameter()
         {
             var eventManager = new EventManager<int, string>();
         
@@ -213,7 +215,7 @@ namespace DJM.EventManager.Tests
         
         
         [Test]
-        public void EventManager_ObserverNotTriggeredAfterRemoved_NoParameters()
+        public void ObserverNotTriggeredAfterRemoved_NoParameters()
         {
             var eventManager = new EventManager();
             
@@ -229,7 +231,7 @@ namespace DJM.EventManager.Tests
         }
         
         [Test]
-        public void EventManager_ObserverNotTriggeredAfterRemoved_OneParameter()
+        public void ObserverNotTriggeredAfterRemoved_OneParameter()
         {
             var eventManager = new EventManager<int>();
 
@@ -248,7 +250,7 @@ namespace DJM.EventManager.Tests
         }
         
         [Test]
-        public void EventManager_ObserverNotTriggeredAfterRemoved_TwoParameter()
+        public void ObserverNotTriggeredAfterRemoved_TwoParameter()
         {
             var eventManager = new EventManager<int, string>();
         

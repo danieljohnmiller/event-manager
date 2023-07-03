@@ -6,6 +6,7 @@ namespace DJM.EventManager
     /// <summary>
     /// The Event Manager facilitates decoupling of components in event-driven architecture. Events are identified using an integer value and invoke event handlers that do not require any parameters.
     /// </summary>
+    [Obsolete("Replaced by GlobalEventManager", false)]
     public class EventManager : EventManagerBase<int, Action>
     {
         public override void AddObserver(int eventId, Action handler)
@@ -38,6 +39,7 @@ namespace DJM.EventManager
     /// The Event Manager facilitates decoupling of components in event-driven architecture. Events are identified using an integer value and invoke event handlers that require one generic parameter.
     /// </summary>
     /// <typeparam name="TParam">Event handler parameter.</typeparam>
+    [Obsolete("Replaced by GlobalEventManager", false)]
     public class EventManager<TParam> : EventManagerBase<int, Action<TParam>>
     {
 
@@ -77,6 +79,7 @@ namespace DJM.EventManager
     /// </summary>
     /// <typeparam name="TParam1">First event handler parameter.</typeparam>
     /// <typeparam name="TParam2">Second event handler parameter.</typeparam>
+    [Obsolete("Replaced by GlobalEventManager", false)]
     public class EventManager<TParam1, TParam2> : EventManagerBase<int, Action<TParam1, TParam2>>
     {
         public override void AddObserver(int eventId, Action<TParam1, TParam2> handler)

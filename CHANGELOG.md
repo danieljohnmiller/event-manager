@@ -9,6 +9,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 none
 
+## [5.0.0] - 2023-07-03
+
+### Changed
+
+- Removed generic event ID from global event manager interface. Event ID must be an int.
+- Updated global event manager interface to include more granular removal methods.
+- Tagged original event manager as obsolete.
+
+### Added
+
+- Added more unit tests for global event manager.
+
 ## [4.2.0] - 2023-07-03
 
 ### Changed

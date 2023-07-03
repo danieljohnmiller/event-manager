@@ -1,19 +1,21 @@
 using System;
+using JetBrains.Annotations;
 
 namespace DJM.EventManager
 {
-    public interface IGlobalEventManager<TEventId>
+    public interface IGlobalEventManager
     {
-        public void AddHandler(TEventId eventId, Action handler);
-        public void AddHandler<THandlerParam>(TEventId eventId, Action<THandlerParam> handler);
+        public void AddHandler(int eventId, Action handler);
+        public void AddHandler<THandlerParam>(int eventId, Action<THandlerParam> handler);
 
-        public void RemoveHandler(TEventId eventId, Action handler);
-        public void RemoveHandler<THandlerParam>(TEventId eventId, Action<THandlerParam> handler);
+        public void RemoveHandler(int eventId, Action handler);
+        public void RemoveHandler<THandlerParam>(int eventId, Action<THandlerParam> handler);
 
-        public void TriggerEvent(TEventId eventId);
-        public void TriggerEvent<THandlerParam>(TEventId eventId, THandlerParam param);
+        public void TriggerEvent(int eventId);
+        public void TriggerEvent<THandlerParam>(int eventId, THandlerParam param);
         
-        public void ClearEvent(TEventId eventId);
+        public void ClearEvent(int eventId);
+        public void ClearEventHandlerType(int eventId, [CanBeNull] Type handlerParamType = null);
         public void ClearAll();
     }
 }

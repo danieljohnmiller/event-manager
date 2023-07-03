@@ -4,21 +4,21 @@ namespace DJM.EventManager
 {
     /// <summary>
     /// Facilitates the decoupled communication of components. Is a singleton, so only one instance can exist at a time.
-    /// Events are identified using an int, and support parallel event handlers with zero or one generic parameter.
-    /// Each event can have multiple sets of event handlers with different parameter types. This type may need to be specified when adding handlers,
-    /// and when triggering its event. Only event handlers with that specified type will be triggered.
+    /// Events are identified using an int, and support event handlers with zero or one generic parameter.
+    /// Each event can have multiple sets of event handlers with different parameter types. This type needs to be specified when adding the handlers,
+    /// and triggering the event. Only event handlers with that specified type will be invoked.
     /// </summary>
-    public sealed class GlobalEventManager : IGlobalEventManager<int>
+    public sealed class GlobalEventManager : IGlobalEventManager
     {
         private static readonly object ThreadSafetyLock = new();
         
         private static GlobalEventManager _globalEventManager;
         
-        private readonly NestedEventTable<int, Type> _eventTable;
+        private readonly NestedEventHandlerTable<int, Type> _eventHandlerTable;
         
         private GlobalEventManager()
         {
-            _eventTable = new NestedEventTable<int, Type>();
+            _eventHandlerTable = new NestedEventHandlerTable<int, Type>();
         }
 
         /// <summary>
@@ -42,7 +42,7 @@ namespace DJM.EventManager
         /// <param name="handler">Event handler with no parameters.</param>
         public void AddHandler(int eventId, Action handler)
         {
-            _eventTable.Add(eventId, typeof(void), handler);
+            _eventHandlerTable.AddHandler(eventId, typeof(void), handler);
         }
 
         /// <summary>
@@ -53,7 +53,7 @@ namespace DJM.EventManager
         /// <typeparam name="THandlerParam">Generic type of handlers parameter.</typeparam>
         public void AddHandler<THandlerParam>(int eventId, Action<THandlerParam> handler)
         {
-            _eventTable.Add(eventId, typeof(THandlerParam), handler);
+            _eventHandlerTable.AddHandler(eventId, typeof(THandlerParam), handler);
         }
         
         /// <summary>
@@ -63,7 +63,7 @@ namespace DJM.EventManager
         /// <param name="handler">Event handler with no parameters.</param>
         public void RemoveHandler(int eventId, Action handler)
         {
-            _eventTable.Remove(eventId, typeof(void), handler);
+            _eventHandlerTable.RemoveHandler(eventId, typeof(void), handler);
         }
 
         /// <summary>
@@ -73,7 +73,7 @@ namespace DJM.EventManager
         /// <param name="handler">Event handler with one generic parameter.</param>
         public void RemoveHandler<THandlerParam>(int eventId, Action<THandlerParam> handler)
         {
-            _eventTable.Remove(eventId, typeof(THandlerParam), handler);
+            _eventHandlerTable.RemoveHandler(eventId, typeof(THandlerParam), handler);
         }
 
         /// <summary>
@@ -82,7 +82,7 @@ namespace DJM.EventManager
         /// <param name="eventId">Event identifier.</param>
         public void TriggerEvent(int eventId)
         {
-            var handlers = _eventTable.GetValue(eventId, typeof(void)) as Action;
+            var handlers = _eventHandlerTable.GetHandlers(eventId, typeof(void)) as Action;
             handlers?.Invoke();
         }
 
@@ -94,7 +94,7 @@ namespace DJM.EventManager
         /// <typeparam name="THandlerParam">Event handler parameter type.</typeparam>
         public void TriggerEvent<THandlerParam>(int eventId, THandlerParam param)
         {
-            var handlers = _eventTable.GetValue(eventId, typeof(THandlerParam)) as Action<THandlerParam>;
+            var handlers = _eventHandlerTable.GetHandlers(eventId, typeof(THandlerParam)) as Action<THandlerParam>;
             handlers?.Invoke(param);
         }
 
@@ -104,7 +104,18 @@ namespace DJM.EventManager
         /// <param name="eventId"></param>
         public void ClearEvent(int eventId)
         {
-           _eventTable.Clear(eventId);
+           _eventHandlerTable.ClearEvent(eventId);
+        }
+
+        /// <summary>
+        /// Clear event handlers with specified handler parameter type from event.
+        /// </summary>
+        /// <param name="eventId">Event identifier.</param>
+        /// <param name="handlerParamType">Handler parameter type to clear. Leave null to clear handlers with no parameter.</param>
+        public void ClearEventHandlerType(int eventId, Type handlerParamType = null)
+        {
+            handlerParamType ??= typeof(void);
+            _eventHandlerTable.ClearHandlers(eventId, handlerParamType);
         }
 
         /// <summary>
@@ -112,7 +123,7 @@ namespace DJM.EventManager
         /// </summary>
         public void ClearAll()
         {
-            _eventTable.Clear();
+            _eventHandlerTable.ClearAll();
         }
     }
 }
