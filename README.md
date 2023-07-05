@@ -250,6 +250,16 @@ void HandlerMethod2() { }
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 
+## Upcoming features
+
+The following features are expected in version 8.0.0:
+
+- Event manager implementation that extends `Monobehavior` so can be attached to game objects in Unity. This will include serializing parts of the event manager to expose them to the Unity editor.
+- Support for event handlers with up to three generic parameters.
+- 'Event manager lite' implementation where only one handler signature can be assigned to each event ID.
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
 <!-- CONTRIBUTING -->
 ## Contributing
 
