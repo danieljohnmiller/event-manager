@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace DJM.EventManager
+namespace DJM.Legacy.EventManager
 {
     public class NestedEventHandlerTable<TOuterKey, TInnerKey>
     {

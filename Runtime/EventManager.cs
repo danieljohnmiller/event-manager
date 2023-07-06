@@ -1,62 +1,102 @@
 using System;
+using DJM.EventManager;
+
 
 namespace DJM.EventManager
 {
-    public class EventManager : IEventManager
+    public class EventManager<TEventId> : IEventManager<TEventId>
     {
-        private readonly NestedEventHandlerTable<int, Type> _eventHandlerTable;
-        
-        public EventManager()
+        public void AddObserver(TEventId eventId, Action handler)
         {
-            _eventHandlerTable = new NestedEventHandlerTable<int, Type>();
-        }
-        
-        public void AddHandler(int eventId, Action handler)
-        {
-            _eventHandlerTable.AddHandler(eventId, typeof(void), handler);
+            throw new NotImplementedException();
         }
 
-        public void AddHandler<THandlerParam>(int eventId, Action<THandlerParam> handler)
+        public void AddObserver<TParam>(TEventId eventId, Action<TParam> handler)
         {
-            _eventHandlerTable.AddHandler(eventId, typeof(THandlerParam), handler);
+            throw new NotImplementedException();
         }
 
-        public void RemoveHandler(int eventId, Action handler)
+        public void AddObserver<TParam1, TParam2>(TEventId eventId, Action<TParam1, TParam2> handler)
         {
-            _eventHandlerTable.RemoveHandler(eventId, typeof(void), handler);
+            throw new NotImplementedException();
         }
 
-        public void RemoveHandler<THandlerParam>(int eventId, Action<THandlerParam> handler)
+        public void AddObserver<TParam1, TParam2, TParam3>(TEventId eventId, Action<TParam1, TParam2, TParam3> handler)
         {
-            _eventHandlerTable.RemoveHandler(eventId, typeof(THandlerParam), handler);
+            throw new NotImplementedException();
         }
 
-        public void TriggerEvent(int eventId)
+        public void AddObserver<TParam1, TParam2, TParam3, TParam4>(TEventId eventId, Action<TParam1, TParam2, TParam3, TParam4> handler)
         {
-            var handlers = _eventHandlerTable.GetHandlers(eventId, typeof(void)) as Action;
-            handlers?.Invoke();
+            throw new NotImplementedException();
         }
 
-        public void TriggerEvent<THandlerParam>(int eventId, THandlerParam param)
+        public void RemoveObserver(TEventId eventId, Action handler)
         {
-            var handlers = _eventHandlerTable.GetHandlers(eventId, typeof(THandlerParam)) as Action<THandlerParam>;
-            handlers?.Invoke(param);
+            throw new NotImplementedException();
         }
 
-        public void RemoveEvent(int eventId)
+        public void RemoveObserver<TParam>(TEventId eventId, Action<TParam> handler)
         {
-            _eventHandlerTable.ClearEvent(eventId);
+            throw new NotImplementedException();
         }
 
-        public void RemoveEventHandlerType(int eventId, Type handlerParamType)
+        public void RemoveObserver<TParam1, TParam2>(TEventId eventId, Action<TParam1, TParam2> handler)
         {
-            handlerParamType ??= typeof(void);
-            _eventHandlerTable.ClearHandlers(eventId, handlerParamType);
+            throw new NotImplementedException();
         }
 
-        public void RemoveAll()
+        public void RemoveObserver<TParam1, TParam2, TParam3>(TEventId eventId, Action<TParam1, TParam2, TParam3> handler)
         {
-            _eventHandlerTable.ClearAll();
+            throw new NotImplementedException();
+        }
+
+        public void RemoveObserver<TParam1, TParam2, TParam3, TParam4>(TEventId eventId, Action<TParam1, TParam2, TParam3, TParam4> handler)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void TriggerEvent(TEventId eventId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void TriggerEvent<TParam>(TEventId eventId, TParam param)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void TriggerEvent<TParam1, TParam2>(TEventId eventId, TParam1 param1, TParam2 param2)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void TriggerEvent<TParam1, TParam2, TParam3>(TEventId eventId, TParam1 param1, TParam2 param2, TParam3 param3)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void TriggerEvent<TParam1, TParam2, TParam3, TParam4>(TEventId eventId, TParam1 param1, TParam2 param2, TParam3 param3,
+            TParam4 param4)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool ContainsEvent(TEventId eventId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void ClearEvent(TEventId eventId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void ClearAllEvents()
+        {
+            throw new NotImplementedException();
         }
     }
 }
+
+

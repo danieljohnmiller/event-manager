@@ -7,7 +7,34 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-none
+### Added
+
+### Changed
+
+
+### Removed
+
+### Deprecated
+
+- Deprecated GlobalEventManager and EventManager (Moved into DJM.Legacy.EventManager namespace).
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 ## [7.0.0] - 2023-07-03
 

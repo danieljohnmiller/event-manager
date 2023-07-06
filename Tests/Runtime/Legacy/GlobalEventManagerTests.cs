@@ -1,5 +1,7 @@
 using NUnit.Framework;
 
+using DJM.Legacy.EventManager;
+
 namespace DJM.EventManager.Tests
 {
     [TestFixture]

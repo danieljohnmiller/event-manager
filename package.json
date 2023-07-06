@@ -2,7 +2,7 @@
   "name": "com.djm.event-manager",
   "version": "7.0.0",
   "displayName": "Event Manager",
-  "description": "Simple c# event manager for event-driven architecture.",
+  "description": "C# event manager for Unity.",
   "documentationUrl": "https://github.com/danieljohnmiller/event-manager",
   "changelogUrl": "https://github.com/danieljohnmiller/event-manager/blob/main/CHANGELOG.md",
   "licensesUrl": "https://github.com/danieljohnmiller/event-manager/blob/main/LICENSE.txt",
