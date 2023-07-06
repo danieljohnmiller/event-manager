@@ -1,11 +1,15 @@
 using System;
-using DJM.EventManager;
-
+using System.Collections.Generic;
 
 namespace DJM.EventManager
 {
     public class EventManager<TEventId> : IEventManager<TEventId>
     {
+        public EventManager()
+        {
+            
+        }
+
         public void AddObserver(TEventId eventId, Action handler)
         {
             throw new NotImplementedException();
@@ -82,17 +86,17 @@ namespace DJM.EventManager
             throw new NotImplementedException();
         }
 
-        public bool ContainsEvent(TEventId eventId)
+        public int GetObserverCount(TEventId eventId)
         {
             throw new NotImplementedException();
         }
 
-        public void ClearEvent(TEventId eventId)
+        public void ClearObservers(TEventId eventId)
         {
             throw new NotImplementedException();
         }
 
-        public void ClearAllEvents()
+        public void ClearAllObservers()
         {
             throw new NotImplementedException();
         }

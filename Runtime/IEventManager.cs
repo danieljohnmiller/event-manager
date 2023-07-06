@@ -22,11 +22,11 @@ namespace DJM.EventManager
         public void TriggerEvent<TParam1, TParam2, TParam3>(TEventId eventId, TParam1 param1, TParam2 param2, TParam3 param3);
         public void TriggerEvent<TParam1, TParam2, TParam3, TParam4>(TEventId eventId, TParam1 param1, TParam2 param2, TParam3 param3, TParam4 param4);
 
-        public bool ContainsEvent(TEventId eventId);
+        public int GetObserverCount(TEventId eventId);
         
-        public void ClearEvent(TEventId eventId);
+        public void ClearObservers(TEventId eventId);
         
-        public void ClearAllEvents();
+        public void ClearAllObservers();
     }
 }
 
