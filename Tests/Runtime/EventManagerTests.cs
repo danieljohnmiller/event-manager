@@ -1,4 +1,5 @@
 
+using System;
 using NUnit.Framework;
 
 namespace DJM.EventManager.Tests
@@ -131,6 +132,41 @@ namespace DJM.EventManager.Tests
             Assert.AreEqual(input3, result3);
             Assert.AreEqual(input4, result4);
         }
+        
+        [Test]
+        public void TriggerEvent_MultipleObservers()
+        {
+            var eventManager = new EventManager<int>();
+
+            const int input1 = 5;
+            const string input2 = "input";
+            
+            var result1 = 0;
+            var result2 = string.Empty;
+
+            void Handler1(int i, string s)
+            {
+                result1 += i;
+                result2 += s;
+            }
+            
+            void Handler2(int i, string s)
+            {
+                result1 += i;
+                result2 += s;
+            }
+            
+            eventManager.AddObserver<int, string>(EventId01, Handler1);
+            eventManager.AddObserver<int, string>(EventId01, Handler2);
+            
+            Assert.AreNotEqual(input1, result1);
+            Assert.AreNotEqual(input2, result2);
+            eventManager.TriggerEvent<int, string>(EventId01, input1, input2);
+            Assert.AreEqual(input1*2, result1);
+            Assert.AreEqual(input2+input2, result2);
+        }
+
+
     }
 }
 
