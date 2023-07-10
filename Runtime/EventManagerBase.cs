@@ -24,6 +24,8 @@ namespace DJM.EventManager
             {
                 ValidateHandlerSignature(eventId, eventData.HandlerParamSignature, handlerParamSignature);
                 
+                if(eventData.Handlers.GetInvocationList().Contains(handler)) return;
+                
                 eventData.Handlers = Delegate.Combine(eventData.Handlers, handler);
                 EventTable[eventId] = eventData;
             }
