@@ -6,7 +6,7 @@ namespace DJM.EventManager
 {
     public abstract class EventManagerBase<TEventId>
     {
-        private const string HandlerParamSignatureArgumentExceptionFormat = "handler: Handler’s signature does not match the expected signature for event ID {0}. Expected: {1}, Actual: {2}";
+        private const string HandlerParamSignatureArgumentExceptionFormat = "handler: parameter signature does not match the expected signature for event ID {0}. Expected: {1}, Actual: {2}";
         
         protected readonly IDictionary<TEventId, EventData> EventTable;
 
@@ -51,17 +51,7 @@ namespace DJM.EventManager
             
             EventTable.Remove(eventId);
         }
-
-        // protected EventData GetEvent(TEventId eventId)
-        // {
-        //     return EventTable.TryGetValue(eventId, out var eventData) ? eventData : null;
-        // }
-        //
-        // protected void RemoveEvent(TEventId eventId)
-        // {
-        //     EventTable.Remove(eventId);
-        // }
-
+        
         protected static void ValidateHandlerSignature(TEventId eventId, Type[] expectedTypes, Type[] actualTypes)
         {
             // match as no parameters for either
