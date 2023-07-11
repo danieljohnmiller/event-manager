@@ -53,9 +53,8 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-Event Manager is a package for Unity game engine that simplifies communication between decoupled C# components. 
-It allows you to subscribe to, and trigger custom events with minimal code and without direct references. 
-Event Manager is designed to be lightweight, easy to use, and extensible. 
+Event Manager is a package for Unity game engine that manages communication between decoupled C# components. 
+It allows you to subscribe to, and trigger custom events with minimal code and without direct references.
 Whether you need to coordinate gameplay, UI, audio, or anything else, 
 Event Manager can help you achieve a modular and maintainable architecture for your Unity projects.
 
@@ -85,178 +84,132 @@ For more information about installing Unity packages from git, see [Unity Docume
 <!-- USAGE EXAMPLES -->
 ## Usage
 
-The interface `IEventManager` is provided by the event manager package to ensure concrete implementations of the service are consistent and interchangeable.
-
-Events are identified using an `int`, and support event handlers with zero or one generic parameter.
-Event handlers with different parameter types can be added to the same event, but the parameter type needs to be specified when adding the handler, and triggering its event.
-When triggered, only event handlers with the provided parameter type will be invoked.
-
-### Singleton VS instantiatable
-
-The event manager package provides two classes that implement the `IEventManager` interface: `EventManager` and `GlobalEventManager`. `EventManager` is a regular class that can be instantiated multiple times, while `GlobalEventManager` is a singleton class that ensures only one instance exists at any time. Otherwise, both implementations are identical.
-
-The following examples use `GlobalEventManager`, getting the singleton instance from static method `GlobalEventManager.Instance`. If using `EventManager` instead create an instance with `new EventManager();`.
-
-### Simple example
+todo - briefly mention type safety and argument exceptions.
 
 
+### Creating Event Manager Instance
 
-```
-IEventManager eventManager = GlobalEventManager.Instance;
-   
-const int eventId = 0;
-      
-eventManager.AddHandler(eventId, HandlerMethod);
-      
-eventManager.TriggerEvent(eventId);
-   
-   
-void HandlerMethod()
-{
-   // handle the event
-}
+The class `EventManager<TEventId>` is a generic class that allows you to manage events of different types. 
+The generic type parameter `TEventId` specifies the type that events will be identified with. For example, 
+you can use `int`, `string`, or a custom class as `TEventId`. However, there are some recommendations and 
+limitations for using different types.
 
-```
-In this example, we add one handler (`HandlerMethod`) to event 0. 
-`HandlerMethod` is invoked when event 0 is triggered.
+- When using custom classes or structs as `TEventId`, it is important to override the `GetHashCode` and `Equals` methods to ensure that keys are compared correctly.
+- Built-in .NET types such as `int`, `string`, `double`, and `DateTime` can be used as `TEventId` without needing to override the `GetHashCode` and `Equals` methods.
 
-### Multiple Event Handlers
+```csharp
+// Create an instance of EventManager with string as the event identifier type
+var eventManager = new EventManager<string>();
 
-Additional handlers can be added to the same event. As long as their signatures match the first one (in this case no parameters), they will all be triggered when `eventManager.TriggerEvent(eventId)` is called. Here's an example:
-
-
-```
-IEventManager eventManager = GlobalEventManager.Instance;
-   
-const int eventId = 0;
-      
-eventManager.AddHandler(eventId, HandlerMethod1);
-eventManager.AddHandler(eventId, HandlerMethod2);
-eventManager.AddHandler(eventId, HandlerMethod3);
-      
-eventManager.TriggerEvent(eventId);
-
-   
-void HandlerMethod1() { }
-void HandlerMethod2() { }
-void HandlerMethod3() { }
+// Define some event identifiers
+const string EVENT_A = "EventA";
+const string EVENT_B = "EventB";
+const string EVENT_C = "EventC";
+const string EVENT_B = "EventD";
+const string EVENT_C = "EventE";
 
 ```
 
-This time we add 3 different handlers to event 0. As they all have the same signature, all three are triggered on `eventManager.TriggerEvent(eventId);`.
+### Adding Observers
 
+You can add observers to events using the `AddObserver` methods. The observers are actions that will be invoked when the event is triggered.
 
-### Event Handlers with Parameters
+Observers may have up to four generic parameters. The generic parameters of these methods are strongly typed, which means that they must be 
+explicitly declared when adding observers. For example, if you want to add an observer with one `int` parameter, you must use the `AddObserver<TParam>` 
+method and specify `int` as the type for `TParam`.
 
-Event handlers with one generic parameter are supported by the event manager, and can be added to the same event as parameterless handlers.
-To add an event handler with a parameter, specify the type of its parameter when adding it to the manager e.g. `eventManager.AddHandler<type>(eventId, Handler);`.
+Each `TEventId` only supports one observer signature. This means that if an event already has an observer with a certain 
+number of parameters and types, you cannot add another observer with a different number of parameters or types. For example, 
+if an event already has an observer with one `int` parameter, you cannot add another observer with no parameters or with a 
+different type of parameter. If you try to do so, an `ArgumentException` will be thrown. It is important to ensure that both the number of parameters and their types match when adding observers to events.
+
+```csharp
+// Add an observer with no parameters to EVENT_A
+eventManager.AddObserver(EVENT_A, ObserverNoParams);
+
+// Add an observer with one parameter to EVENT_B
+eventManager.AddObserver<int>(EVENT_B, ObserverOneParams);
+
+// Add an observer with two parameters to EVENT_C
+eventManager.AddObserver<string, bool>(EVENT_C, ObserverTwoParams);
+
+// Add an observer with three parameters to EVENT_D
+eventManager.AddObserver<float, string, int>(EVENT_D, ObserverThreeParams);
+
+// Add an observer with four parameters to EVENT_E
+eventManager.AddObserver<int, string, int[], object>(EVENT_E, ObserverFourParams);
+
+void ObserverNoParams() { }
+void ObserverOneParams(int i) { }
+void ObserverTwoParams(string s, bool o) { }
+void ObserverThreeParams(float f, string s, int i) { }
+void ObserverFourParams(int i, string s, int[] i, object o) { }
 
 ```
-IEventManager eventManager = GlobalEventManager.Instance;
-   
-const int eventId = 0;
-      
-eventManager.AddHandler<int>(eventId, HandlerMethod1);
-eventManager.AddHandler<int>(eventId, HandlerMethod2);
-eventManager.AddHandler<string>(eventId, HandlerMethod3);
-      
-eventManager.TriggerEvent<int>(eventId, 5);
 
-   
-void HandlerMethod1(int a) { }
-void HandlerMethod2(int b) { }
-void HandlerMethod3(string c) { }
+### Triggering Events
 
+To trigger an event, you can use the `TriggerEvent` methods. You need to pass the event identifier and the event data (if any) as parameters. For example:
+
+```csharp
+// Trigger EVENT_A with no data
+eventManager.TriggerEvent(EVENT_A);
+
+// Trigger EVENT_B with an integer as data
+eventManager.TriggerEvent(EVENT_B, 42);
+
+// Trigger EVENT_C with a string and a boolean as data
+eventManager.TriggerEvent(EVENT_C, "Hello", true);
+
+// Trigger EVENT_C with a string and a boolean as data
+eventManager.TriggerEvent(EVENT_D, 0.1f, "Hello", 0);
+
+// Trigger EVENT_C with a string and a boolean as data
+eventManager.TriggerEvent(EVENT_E, 0, "Hello", new int[] { 1, 2, 3, 4 }, new object());
 ```
 
-In this example, three handlers are added to event 0. `HandlerMethod1` and `HandlerMethod2` have an `int` parameter, and `HandlerMethod3` has a string parameter. 
-When triggering an event with a parameter, specify the parameter type and pass in an object of that type (e.g. `eventManager.TriggerEvent<int>(eventId, 5);`).
-Only handlers with an int parameter (`HandlerMethod1` and `HandlerMethod2`) will be invoked on this trigger. 
-If we wanted to invoke `HandlerMethod3` then we would call `eventManager.TriggerEvent<string>(eventId, "exampleString")`.
+Although you may explicitly declare the types of the event data (e.g. `eventManager.TriggerEvent<int>(EVENT_B, 42);`) 
+you may not need to due to type inference.
 
-Any combination and number of handlers with different parameter types can be added to a single event.
+### Removing Observers
 
-### Removing A Handler
+To remove an observer from an event, you can use the `RemoveObserver` methods. You need to pass the event identifier and the observer action as parameters. For example:
 
-Handlers can be removed from event manager to stop them responding to event triggers. `IEventManager` exposes several methods for this:
-
-
-
-
-
-1. `IEventManager.RemoveHandler(int eventId, Action handler);` or `IEventManager.RemoveHandler<THandlerParam>(int eventId, Action<THandlerParam> handler);` - only specified handler is removed. For handler with parameter, specify type.
-```
-IEventManager eventManager = GlobalEventManager.Instance;
-const int eventId = 1;
-
-eventManager.AddHandler<int>(eventId, HandlerMethod);
-eventManager.AddHandler(eventId, HandlerMethod2);
-
-eventManager.RemoveHandler<int>(eventId, HandlerMethod); // remove handler with int parameter
-eventManager.RemoveHandler(eventId, HandlerMethod2); // remove handler with no parameter.
-
-
-void HandlerMethod(int i) { }
-void HandlerMethod2() { }
+```csharp
+// Remove the observer from EVENT_A
+eventManager.RemoveObserver(EVENT_A, () => Console.WriteLine("Event A triggered"));
 ```
 
+### Get Observer Count
 
-2. `IEventManager.RemoveEvent(int eventId);` - specified event and all handlers regardless of parameter type are removed.
+To get the number of observers for an event, you can use the `GetObserverCount` method. You need to pass the event identifier as a parameter. For example:
+
+```csharp
+// Get the number of observers for EVENT_B
+int count = eventManager.GetObserverCount(EVENT_B);
+Console.WriteLine($"There are {count} observers for Event B");
 ```
-IEventManager eventManager = GlobalEventManager.Instance;
-const int eventId = 1;
 
-eventManager.AddHandler<int>(eventId, HandlerMethod);
-eventManager.AddHandler(eventId, HandlerMethod2);
+### Clear Observers
 
-eventManager.RemoveEvent(eventId); // all handlers removed from event
+To clear all the observers for an event, you can use the `ClearObservers` method. You need to pass the event identifier as a parameter. For example:
 
+```csharp
+// Clear all the observers for EVENT_C
+eventManager.ClearObservers(EVENT_C);
+```
 
-void HandlerMethod(int i) { }
-void HandlerMethod2() { }
+### Clear All Observers
+
+To clear all the observers for all the events, you can use the `ClearAllObservers` method. For example:
+
+```csharp
+// Clear all the observers for all the events
+eventManager.ClearAllObservers();
 ```
 
 
-3. `IEventManager.RemoveEventHandlerType(int eventId, [CanBeNull] Type handlerParamType);` - removes handlers of specified parameter type from event. Set `handlerParamType` to null to remove handlers with no parameter.
-```
-IEventManager eventManager = GlobalEventManager.Instance;
-const int eventId = 1;
 
-eventManager.AddHandler<int>(eventId, HandlerMethod);
-eventManager.AddHandler(eventId, HandlerMethod2);
-
-eventManager.RemoveEventHandlerType(eventId, typeof(int)); // only handlers with int parameter removed
-
-
-void HandlerMethod(int i) { }
-void HandlerMethod2() { }
-```
-
-4. `IEventManager.RemoveAll();` - removes all events along with all handlers.
-```
-IEventManager eventManager = GlobalEventManager.Instance;
-const int eventId = 1;
-
-eventManager.AddHandler<int>(eventId, HandlerMethod);
-eventManager.AddHandler(eventId, HandlerMethod2);
-
-eventManager.RemoveAll(); // all events and handlers removed
-
-
-void HandlerMethod(int i) { }
-void HandlerMethod2() { }
-```
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-
-## Upcoming features
-
-The following features are expected in version 8.0.0:
-
-- Event manager implementation that extends `Monobehavior` so can be attached to game objects in Unity. This will include serializing parts of the event manager to expose them to the Unity editor.
-- Support for event handlers with up to three generic parameters.
-- 'Event manager lite' implementation where only one handler signature can be assigned to each event ID.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 

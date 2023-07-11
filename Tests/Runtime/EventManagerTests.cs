@@ -490,6 +490,7 @@ namespace DJM.EventManager.Tests
         
         // trigger event with two handlers/observers
         
+        
         [Test]
         public void TriggerEvent_0ParamEventMultipleObservers_HandlersInvoked()
         {
