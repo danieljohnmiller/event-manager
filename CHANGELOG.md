@@ -7,7 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-none
+## [8.0.0] - 2023-07-13
+
+
+### Added
+
+- New version of event manager interface (`IEventManager`).
+- New instantiatable event manager implementing `IEventManager`.
+- Unit tests for new instantiatable event manager.
+
+### Changed
+
+- Updated readme for v8.0.0
+
+### Removed
+
+-Removed legacy GlobalEventManager and EventManager.
 
 ## [7.0.0] - 2023-07-03
 
