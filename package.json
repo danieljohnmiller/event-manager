@@ -1,6 +1,6 @@
 {
   "name": "com.djm.event-manager",
-  "version": "7.0.0",
+  "version": "8.0.0",
   "displayName": "Event Manager",
   "description": "Simple c# event manager for event-driven architecture.",
   "documentationUrl": "https://github.com/danieljohnmiller/event-manager",
