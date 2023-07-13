@@ -82,12 +82,12 @@ For more information about installing Unity packages from git, see [Unity Docume
 
 
 <!-- USAGE EXAMPLES -->
-## Usage
+##  Essential Concepts
 
-todo - briefly mention type safety and argument exceptions.
+There are a few important concepts to understand before working with event manager.
 
 
-### Creating Event Manager Instance
+### Event ID Type
 
 The class `EventManager<TEventId>` is a generic class that allows you to manage events of different types. 
 The generic type parameter `TEventId` specifies the type that events will be identified with. For example, 
@@ -96,6 +96,23 @@ limitations for using different types.
 
 - When using custom classes or structs as `TEventId`, it is important to override the `GetHashCode` and `Equals` methods to ensure that keys are compared correctly.
 - Built-in .NET types such as `int`, `string`, `double`, and `DateTime` can be used as `TEventId` without needing to override the `GetHashCode` and `Equals` methods.
+
+### Observer parameters
+
+Observers are C# actions invoked when their event is triggered. They may have no parameters, or up to four generic parameters. 
+Parameter types must be explicitly declared or inferred by the compiler when adding or removing observers, and triggering events.
+
+Each event supports only one observer parameter signature. Subsequent observers must have the same number and types of parameters as the original.
+
+Using an incorrect parameter signature when adding or removing an observer, or triggering events will throw an `ArgumentException`.
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+## Usage
+
+`EventManager<TEventId>` provides a comprehensive set of methods to facilitate event management. The following examples illustrate the usage of each method:
+
+To create a new event manager, instantiate it with the desired `TEvendId` type. The following examples use `string`.
 
 ```csharp
 // Create an instance of EventManager with string as the event identifier type
@@ -112,18 +129,21 @@ const string EVENT_C = "EventE";
 
 ### Adding Observers
 
-You can add observers to events using the `AddObserver` methods. The observers are actions that will be invoked when the event is triggered.
+You can add observers to events using the `AddObserver` methods. You need to pass the event identifier and the observer action as parameters
 
-Observers may have up to four generic parameters. The generic parameters of these methods are strongly typed, which means that they must be 
-explicitly declared when adding observers. For example, if you want to add an observer with one `int` parameter, you must use the `AddObserver<TParam>` 
-method and specify `int` as the type for `TParam`.
+Observer parameter types must be explicitly declared when adding observers. For example, when adding an observer with 
+one `int` parameter, you must use the `AddObserver<TParam>` method and specify `int` as the type for `TParam`.
 
-Each `TEventId` only supports one observer signature. This means that if an event already has an observer with a certain 
-number of parameters and types, you cannot add another observer with a different number of parameters or types. For example, 
-if an event already has an observer with one `int` parameter, you cannot add another observer with no parameters or with a 
-different type of parameter. If you try to do so, an `ArgumentException` will be thrown. It is important to ensure that both the number of parameters and their types match when adding observers to events.
+Remember, each event supports only one observer signature. Attempting to add an observer with a different number of 
+parameters or parameter types will result in an `ArgumentException` being thrown.
 
 ```csharp
+void ObserverNoParams() { }
+void ObserverOneParams(int i) { }
+void ObserverTwoParams(string s, bool o) { }
+void ObserverThreeParams(float f, string s, int i) { }
+void ObserverFourParams(int i, string s, int[] i, object o) { }
+
 // Add an observer with no parameters to EVENT_A
 eventManager.AddObserver(EVENT_A, ObserverNoParams);
 
@@ -138,18 +158,17 @@ eventManager.AddObserver<float, string, int>(EVENT_D, ObserverThreeParams);
 
 // Add an observer with four parameters to EVENT_E
 eventManager.AddObserver<int, string, int[], object>(EVENT_E, ObserverFourParams);
-
-void ObserverNoParams() { }
-void ObserverOneParams(int i) { }
-void ObserverTwoParams(string s, bool o) { }
-void ObserverThreeParams(float f, string s, int i) { }
-void ObserverFourParams(int i, string s, int[] i, object o) { }
-
 ```
 
 ### Triggering Events
 
-To trigger an event, you can use the `TriggerEvent` methods. You need to pass the event identifier and the event data (if any) as parameters. For example:
+To trigger an event, you can use the `TriggerEvent` methods. You need to pass the event identifier and event data (if any) as parameters.
+
+If event data types cannot be inferred by the compiler, they must be explicitly declared. For example, when triggering an event with
+one `int` parameter, you must use the `TriggerEvent<TParam>` method and specify `int` as the type for `TParam`.
+
+Remember, each event supports only one observer signature. Attempting to trigger an event with a different number of
+parameters or parameter types will result in an `ArgumentException` being thrown.
 
 ```csharp
 // Trigger EVENT_A with no data
@@ -161,38 +180,53 @@ eventManager.TriggerEvent(EVENT_B, 42);
 // Trigger EVENT_C with a string and a boolean as data
 eventManager.TriggerEvent(EVENT_C, "Hello", true);
 
-// Trigger EVENT_C with a string and a boolean as data
+// Trigger EVENT_D with a string and a boolean as data
 eventManager.TriggerEvent(EVENT_D, 0.1f, "Hello", 0);
 
-// Trigger EVENT_C with a string and a boolean as data
+// Trigger EVENT_E with a string and a boolean as data
 eventManager.TriggerEvent(EVENT_E, 0, "Hello", new int[] { 1, 2, 3, 4 }, new object());
 ```
 
-Although you may explicitly declare the types of the event data (e.g. `eventManager.TriggerEvent<int>(EVENT_B, 42);`) 
-you may not need to due to type inference.
-
 ### Removing Observers
 
-To remove an observer from an event, you can use the `RemoveObserver` methods. You need to pass the event identifier and the observer action as parameters. For example:
+You can remove observers from events using the `RemoveObserver` methods. You need to pass the event identifier and the observer action as parameters
+
+Observer parameter types must be explicitly declared when removing observers. For example, when removing an observer with
+one `int` parameter, you must use the `RemoveObserver<TParam>` method and specify `int` as the type for `TParam`.
+
+Remember, each event supports only one observer signature. Attempting to remove an observer with a different number of
+parameters or parameter types will result in an `ArgumentException` being thrown.
+
 
 ```csharp
-// Remove the observer from EVENT_A
-eventManager.RemoveObserver(EVENT_A, () => Console.WriteLine("Event A triggered"));
+// Remove previously added observer with no parameters from EVENT_A
+eventManager.RemoveObserver(EVENT_A, ObserverNoParams);
+
+// Remove previously added observer with one parameter from EVENT_B
+eventManager.RemoveObserver<int>(EVENT_B, ObserverOneParams);
+
+// Remove previously added observer with two parameters from EVENT_C
+eventManager.RemoveObserver<string, bool>(EVENT_C, ObserverTwoParams);
+
+// Remove previously added observer with three parameters from EVENT_D
+eventManager.RemoveObserver<float, string, int>(EVENT_D, ObserverThreeParams);
+
+// Remove previously added observer with four parameters from EVENT_E
+eventManager.RemoveObserver<int, string, int[], object>(EVENT_E, ObserverFourParams);
 ```
 
 ### Get Observer Count
 
-To get the number of observers for an event, you can use the `GetObserverCount` method. You need to pass the event identifier as a parameter. For example:
+To get the number of observers subscribed to an event, you can use the `GetObserverCount` method. You need to pass the event identifier as a parameter.
 
 ```csharp
 // Get the number of observers for EVENT_B
 int count = eventManager.GetObserverCount(EVENT_B);
-Console.WriteLine($"There are {count} observers for Event B");
 ```
 
 ### Clear Observers
 
-To clear all the observers for an event, you can use the `ClearObservers` method. You need to pass the event identifier as a parameter. For example:
+To clear all the observers for an event, you can use the `ClearObservers` method. You need to pass the event identifier as a parameter.
 
 ```csharp
 // Clear all the observers for EVENT_C
@@ -201,7 +235,7 @@ eventManager.ClearObservers(EVENT_C);
 
 ### Clear All Observers
 
-To clear all the observers for all the events, you can use the `ClearAllObservers` method. For example:
+To clear all the observers for all events, you can use the `ClearAllObservers` method.
 
 ```csharp
 // Clear all the observers for all the events
