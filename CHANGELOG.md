@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [8.0.0] - 2023-07-13
+
+
 ### Added
 
 - New version of event manager interface (`IEventManager`).
@@ -15,30 +18,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Updated readme for v8.0.0
 
 ### Removed
 
-### Deprecated
-
-- Deprecated GlobalEventManager and EventManager (Moved into DJM.Legacy.EventManager namespace).
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+-Removed legacy GlobalEventManager and EventManager.
 
 ## [7.0.0] - 2023-07-03
 
