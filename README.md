@@ -9,7 +9,7 @@
 <br />
 <div align="center">
   <a href="https://github.com/danieljohnmiller/event-manager">
-    <img src="https://i.imgur.com/pvE7uPU.png" alt="Logo" width="80" height="80">
+    <img src="https://i.imgur.com/dmkwuPo.png" alt="Logo" width="80" height="80">
   </a>
 
 <h3 align="center">Event Manager Unity Package</h3>
