@@ -4,13 +4,13 @@ using System.Linq;
 
 namespace DJM.EventManager
 {
-    public abstract class EventManagerBase<TEventId>
+    internal sealed class EventService<TEventId>
     {
         private const string HandlerParamSignatureArgumentExceptionFormat = "handler: parameter signature does not match the expected signature for event ID {0}. Expected: {1}, Actual: {2}";
         
-        protected readonly IDictionary<TEventId, EventData> EventTable;
+        internal readonly IDictionary<TEventId, EventData> EventTable;
 
-        protected EventManagerBase()
+        internal EventService()
         {
             EventTable = new Dictionary<TEventId, EventData>();
         }
@@ -18,7 +18,7 @@ namespace DJM.EventManager
         
         // the following methods will throw exceptions if you input incorrect handler params.
         
-        protected void AddHandler(TEventId eventId, Delegate handler, Type[] handlerParamSignature)
+        internal void AddHandler(TEventId eventId, Delegate handler, Type[] handlerParamSignature)
         {
             if (EventTable.TryGetValue(eventId, out var eventData))
             {
@@ -33,7 +33,7 @@ namespace DJM.EventManager
                 EventTable[eventId] = new EventData(handler, handlerParamSignature);
         }
         
-        protected void RemoveHandler(TEventId eventId, Delegate handler, Type[] handlerParamSignature)
+        internal void RemoveHandler(TEventId eventId, Delegate handler, Type[] handlerParamSignature)
         {
             if (!EventTable.TryGetValue(eventId, out var eventData))
                 return;
@@ -52,7 +52,7 @@ namespace DJM.EventManager
             EventTable.Remove(eventId);
         }
         
-        protected static void ValidateHandlerSignature(TEventId eventId, Type[] expectedTypes, Type[] actualTypes)
+        internal static void ValidateHandlerSignature(TEventId eventId, Type[] expectedTypes, Type[] actualTypes)
         {
             // match as no parameters for either
             if(expectedTypes is null && actualTypes is null) return;

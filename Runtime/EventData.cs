@@ -2,15 +2,15 @@ using System;
 
 namespace DJM.EventManager
 {
-    public class EventData
+    internal sealed class EventData
     {
-        public EventData(Delegate handlers, Type[] handlerParamSignature)
+        internal EventData(Delegate handlers, Type[] handlerParamSignature)
         {
             Handlers = handlers;
             HandlerParamSignature = handlerParamSignature;
         }
         
-        public Delegate Handlers;
-        public Type[] HandlerParamSignature { get; private set; }
+        internal Delegate Handlers;
+        internal Type[] HandlerParamSignature { get; private set; }
     }
 }

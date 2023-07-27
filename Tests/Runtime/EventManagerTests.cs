@@ -4,7 +4,7 @@ using NUnit.Framework;
 namespace DJM.EventManager.Tests
 {
     [TestFixture]
-    public class EventManagerTests
+    internal sealed class EventManagerTests
     {
         private const int EventId01 = 0;
         private const int EventId02 = 1;

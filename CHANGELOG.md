@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+none
+
+## [8.1.0] - 2023-07-28
+
+### Changed
+
+- Sealed and set accessability to internal for event manager services that do not need to be exposed outside of the package assembly.
+- Changed EventManagerBase from an abstract class to a concrete class that is used internally by EventManager.
+
 ## [8.0.0] - 2023-07-13
 
 
