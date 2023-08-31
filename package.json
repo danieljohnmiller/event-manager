@@ -3,15 +3,15 @@
   "version": "8.1.0",
   "displayName": "Event Manager",
   "description": "C# event manager for Unity.",
-  "documentationUrl": "https://github.com/danieljohnmiller/event-manager",
-  "changelogUrl": "https://github.com/danieljohnmiller/event-manager/blob/main/CHANGELOG.md",
-  "licensesUrl": "https://github.com/danieljohnmiller/event-manager/blob/main/LICENSE.txt",
+  "documentationUrl": "https://github.com/danjm-dev/event-manager",
+  "changelogUrl": "https://github.com/danjm-dev/event-manager/blob/main/CHANGELOG.md",
+  "licensesUrl": "https://github.com/danjm-dev/event-manager/blob/main/LICENSE.txt",
   "keywords": [
     "event manager"
   ],
   "author": {
-    "name": "Daniel Miller",
-    "email": "daniel.miller.djm@gmail.com",
-    "url": "https://github.com/danieljohnmiller"
+    "name": "danjm-dev",
+    "email": "danjm.dev@gmail.com",
+    "url": "https://github.com/danjm-dev"
   }
 }
