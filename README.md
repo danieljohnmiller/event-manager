@@ -50,8 +50,11 @@
 
 
 
+
 <!-- ABOUT THE PROJECT -->
 ## About The Project
+
+**This repo is archived and replaced by [djm-event-manager](https://github.com/danjm-dev/djm-event-manager).**
 
 Event Manager is a package for Unity game engine that manages communication between decoupled C# components. 
 It allows you to subscribe to, and trigger custom events with minimal code and without direct references.
